@@ -1,0 +1,211 @@
+* {
+    margin: 0;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+body {
+    background-color: rgb(245, 245, 245);
+    font-family: 'Microsoft Yahei';
+}
+
+/*topmost总高40px*/
+#topmost {
+    width: 100%;
+    min-width: 980px;
+    margin: auto; 
+    height: 40px;
+    background-color: rgb(255, 215, 5);
+}
+/*header总高80px*/
+#header {
+    width: 100%;
+    min-width: 980px;
+    height: 79px;
+    background-color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+#main-part {
+    margin: 10px auto; 
+    height: 100%;
+    width: 980px;
+    overflow: hidden;
+}
+
+#main-bar {
+    float: left;
+    width: 720px;
+}
+
+#main-bar-navigation {
+    height: 160px;
+    background-color: rgb(255, 255, 255);
+    margin-bottom: 10px;
+    border: 1px solid rgb(235, 235, 235);
+}
+
+#main-bar-navigation-header {
+    height: 40px;
+    border-bottom: 3px rgb(235, 235, 235) solid;
+    margin: 0 20px 20px 20px;
+    padding-top: 20px;
+}
+
+#main-bar-navigation-header a {
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    border-bottom: 3px rgb(235, 235, 235);
+    }
+
+#main-bar-navigation-header a:hover,
+#main-bar-navigation-header #main-bar-navigation-header-selected {
+    color: rgb(250, 151, 0);
+    border-bottom: 3px rgb(250, 151, 0) solid;
+}
+
+#main-bar-navigation-category {
+    padding: 0 20px;
+}
+
+#main-bar-navigation-category a {
+    width: 130px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+}
+
+#main-bar-navigation-category a:hover,
+#main-bar-navigation-category #main-bar-navigation-category-selected {
+    color: rgb(250, 151, 0);
+}
+
+#main-bar-order-list {
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(235, 235, 235);
+}
+
+.categories-header {
+    height: 50px;
+    background-color: rgb(250, 250, 250);
+    border-bottom: 1px solid rgb(235, 235, 235);
+    line-height: 50px;
+    padding-left: 20px;
+    font-size: 18px;
+}
+
+.categories-header .method-of-sorting {
+    float: right;
+    font-size: 14px;
+    padding-right: 20px;
+}
+
+.categories-header .method-of-sorting:hover {
+    cursor: pointer;
+    color: rgb(250, 151, 0);
+}
+.categories-list {
+    border-bottom: 1px rgb(235, 235, 235) solid;
+    margin-bottom: -5px;
+}
+
+.categories-list-item {
+    display: inline-block;
+    height: 270px;
+    width: 235px;
+    border-right: 1px rgb(235, 235, 235) dashed;
+    border-bottom: 1px rgb(235, 235, 235) dashed;   
+}
+
+#side-bar {
+    float: left;
+    width: 246px;
+    background-color: rgb(255, 255, 255);
+    margin-left: 10px;
+    border: 1px solid rgb(235, 235, 235);
+}
+
+.side-bar-header {    
+    height: 40px;
+    background-color: rgb(255, 215, 0);
+    line-height: 40px;
+    text-align: center;
+}
+
+#my-order-header {
+    width: 246px;
+    position: fixed;
+}
+
+#side-bar ul {
+    list-style-type: none;
+    font-size: 14px;
+    padding: 10px;
+    line-height: 2em;
+    color: rgb(255, 151, 0);
+}
+
+#foot {
+    height: 300px;
+    background-color: rgb(255, 255, 255);
+    min-width: 980px;
+}
+
+#rollback-to-top {
+    height: 50px; 
+    width: 50px;
+    position: fixed;
+    bottom: 20px;
+    right: 100px;
+    background-color: rgba(255, 151, 0, 0.3); 
+    font-size: 14px;
+    text-align: center;
+    line-height: 50px;
+}
+
+#rollback-to-top:hover {
+    cursor: pointer;
+    background-color: rgb(255, 151, 0);
+}
+
+.categories-list-item .food-pic {
+    display: inline-block;
+    margin: 10px 0 10px 10px;
+}
+
+.categories-list-item .item-name,
+.categories-list-item .item-price {
+    display: block;
+    margin: 0 0 10px 10px;
+    font-size: 14px;
+}
+
+.categories-list-item .add-icon {
+    float: right;
+    overflow: hidden;
+    margin: 0 15px 0 0;
+}
+
+.categories-list-item .add-icon:hover {
+    cursor: pointer;
+}
+
+#delegationBall {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(255, 151, 0);
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -ms-border-radius: 5px;
+}
