@@ -142,9 +142,12 @@ body {
     text-align: center;
 }
 
+#my-order-list {
+    position: fixed;
+}
+
 #my-order-header {
     width: 246px;
-    position: fixed;
 }
 
 #side-bar ul {
@@ -208,4 +211,10 @@ body {
     border-radius: 5px;
     -webkit-border-radius: 5px;
     -ms-border-radius: 5px;
+}
+
+#my-order-list span {
+    display: inline-block;
+    font-size: 14px; 
+    margin: 10px;
 }
