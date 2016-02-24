@@ -1,6 +1,4 @@
 define(["compatible"], function (compatible) {
-    //总价
-    var gross = 0;
     //获得订单列表头的位置信息
     var getMyOrderHeaderPos = function (){
         var myOrderHeader = document.getElementById("my-order-header");
@@ -33,10 +31,29 @@ define(["compatible"], function (compatible) {
     };
     
     //计算总价
-    function calculateGross(price) {
-        var pr = parseFloat(price);
-        gross += pr;
+    function calculateGross() {
+        //总价
+        var gross = 0;
+        var priceLi = document.getElementsByClassName("itemPrDis");
+        for(var i = 0; i < priceLi.length; i++) {
+            gross = gross + parseFloat(priceLi[i].innerHTML);
+        }
         return gross;
+    }
+    
+    //总价栏
+    function addGrossList(price) {
+        var grossList = document.createElement("div");
+        grossList.setAttribute("id", "grossList");
+        var grossName = document.createElement("span");
+        grossName.innerHTML = "总价：";
+        var gross = document.createElement("span");
+        gross.setAttribute("id", "gross");
+        gross.innerHTML = price;
+        grossList.appendChild(grossName);
+        grossList.appendChild(gross);
+        var orderList = document.getElementById("my-order-list");
+        orderList.appendChild(grossList);
     }
     
     //当点了第一个东西以后，要出现的类似副标题的东西
@@ -61,12 +78,13 @@ define(["compatible"], function (compatible) {
     
     //点餐时，改变list中的项
     var orderListChange = function (targetEle){
+        var grossList = document.getElementById("grossList");
         var name = targetEle.getAttribute("data-name");
         var price = targetEle.getAttribute("data-price");
         var orderList = document.getElementById("my-order-list");
         var itemNodes = orderList.childNodes;
         //判断当前添加的item是否已在订单中存在，如果存在，则只用加数量
-        for(var i = 1; i< itemNodes.length; i++) {
+        for(var i = 0; i< itemNodes.length; i++) {
             if(itemNodes[i].nodeName == "DIV" && itemNodes[i].getAttribute("data-name") == name) {
                 var itemNum = itemNodes[i].getAttribute("data-number");
                 itemNum = parseFloat(itemNum) + 1;
@@ -75,6 +93,8 @@ define(["compatible"], function (compatible) {
                 itemNumDis.innerHTML = itemNum;
                 var itemPrDis = itemNodes[i].getElementsByClassName("itemPrDis")[0];
                 itemPrDis.innerHTML = parseFloat(price) * parseFloat(itemNum);
+                orderList.removeChild(grossList);
+                addGrossList(calculateGross());
                 return;
             }
         }
@@ -101,6 +121,14 @@ define(["compatible"], function (compatible) {
         orderItem.appendChild(itemNumber);
         orderItem.appendChild(itemPrice);
         orderList.appendChild(orderItem);
+        
+        //如果客户点的还是第一个时，增加总价栏, 没有时 删除前一个总价栏再append
+        if(itemLen == 0) {
+            addGrossList(calculateGross()); 
+        } else if(itemLen > 0) {
+            orderList.removeChild(grossList);
+            addGrossList(calculateGross());
+        }
     };
     
     return {
