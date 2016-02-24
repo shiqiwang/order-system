@@ -1,4 +1,6 @@
 define(["compatible"], function (compatible) {
+    //总价
+    var gross = 0;
     //获得订单列表头的位置信息
     var getMyOrderHeaderPos = function (){
         var myOrderHeader = document.getElementById("my-order-header");
@@ -14,6 +16,7 @@ define(["compatible"], function (compatible) {
         }
         return orderHeaderPos;
     };
+    
     //获取所点餐食的位置信息
     var getOrderItemPos = function (targetEle) {
         var rect = targetEle.getBoundingClientRect();
@@ -28,7 +31,35 @@ define(["compatible"], function (compatible) {
         }
         return orderItemPos;
     };
-    //
+    
+    //计算总价
+    function calculateGross(price) {
+        var pr = parseFloat(price);
+        gross += pr;
+        return gross;
+    }
+    
+    //当点了第一个东西以后，要出现的类似副标题的东西
+    function addSidehead() {
+        var sidehead = document.createElement("div");
+        sidehead.setAttribute("id", "sidehead");
+        var name = document.createElement("span");
+        name.innerHTML = "菜品";
+        name.setAttribute("id", "sideheadName");
+        var num = document.createElement("span");
+        num.innerHTML = "数量";
+        num.setAttribute("id", "sideheadNum");
+        var price = document.createElement("span");
+        price.innerHTML = "价格";
+        price.setAttribute("id", "sideheadPrice");
+        sidehead.appendChild(name);
+        sidehead.appendChild(num);
+        sidehead.appendChild(price);
+        var orderList = document.getElementById("my-order-list");
+        orderList.appendChild(sidehead);
+    }
+    
+    //点餐时，改变list中的项
     var orderListChange = function (targetEle){
         var name = targetEle.getAttribute("data-name");
         var price = targetEle.getAttribute("data-price");
@@ -43,14 +74,20 @@ define(["compatible"], function (compatible) {
                 var itemNumDis = itemNodes[i].getElementsByClassName("itemNumDis")[0];
                 itemNumDis.innerHTML = itemNum;
                 var itemPrDis = itemNodes[i].getElementsByClassName("itemPrDis")[0];
-                itemPrice.innerHTML = parseFloat(price) * parseFloat(itemNum);
+                itemPrDis.innerHTML = parseFloat(price) * parseFloat(itemNum);
                 return;
             }
+        }
+        //当客户点的还是第一个时，加上副标题，即出现 菜品、数量、价格栏
+        var itemLen = document.getElementsByClassName("orderItem").length;
+        if(itemLen == 0) {
+            addSidehead();
         }
         //当前添加的item没有存在在订单中时，新建itemList
         var orderItem = document.createElement("div");
         orderItem.setAttribute("data-name", name);
         orderItem.setAttribute("data-number", 1);
+        orderItem.setAttribute("class", "orderItem");
         var itemName = document.createElement("span");
         var itemNumber = document.createElement("span");
         var itemPrice = document.createElement("span");
@@ -65,6 +102,7 @@ define(["compatible"], function (compatible) {
         orderItem.appendChild(itemPrice);
         orderList.appendChild(orderItem);
     };
+    
     return {
         getMyOrderHeaderPos: getMyOrderHeaderPos,
         getOrderItemPos: getOrderItemPos,
