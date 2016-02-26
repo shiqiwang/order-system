@@ -250,3 +250,8 @@ body {
 #sidehead #sideheadPrice {
     width: 30px;
 }
+
+#grossList #gross {
+    font-weight: bold;
+    color: rgb(254, 77, 61);
+}

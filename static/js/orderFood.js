@@ -56,7 +56,7 @@ define(["compatible"], function (compatible) {
         orderList.appendChild(grossList);
     }
     
-    //当点了第一个东西以后，要出现的类似副标题的东西
+    //当点了第一个东西以后，要出现的类似副标题的东西 
     function addSidehead() {
         var sidehead = document.createElement("div");
         sidehead.setAttribute("id", "sidehead");
@@ -82,27 +82,41 @@ define(["compatible"], function (compatible) {
         var name = targetEle.getAttribute("data-name");
         var price = targetEle.getAttribute("data-price");
         var orderList = document.getElementById("my-order-list");
-        var itemNodes = orderList.childNodes;
-        //判断当前添加的item是否已在订单中存在，如果存在，则只用加数量
-        for(var i = 0; i< itemNodes.length; i++) {
-            if(itemNodes[i].nodeName == "DIV" && itemNodes[i].getAttribute("data-name") == name) {
-                var itemNum = itemNodes[i].getAttribute("data-number");
-                itemNum = parseFloat(itemNum) + 1;
-                itemNodes[i].setAttribute("data-number", itemNum);
-                var itemNumDis = itemNodes[i].getElementsByClassName("itemNumDis")[0];
-                itemNumDis.innerHTML = itemNum;
-                var itemPrDis = itemNodes[i].getElementsByClassName("itemPrDis")[0];
-                itemPrDis.innerHTML = parseFloat(price) * parseFloat(itemNum);
-                orderList.removeChild(grossList);
-                addGrossList(calculateGross());
-                return;
-            }
-        }
+        
         //当客户点的还是第一个时，加上副标题，即出现 菜品、数量、价格栏
         var itemLen = document.getElementsByClassName("orderItem").length;
         if(itemLen == 0) {
             addSidehead();
+            //在所有item外再加一层div是为了滚动条的出现更加自然
+            var listBody = document.createElement("div");
+            listBody.setAttribute("id", "listBody");
+            orderList.appendChild(listBody);
         }
+        var listBod = document.getElementById("listBody");
+        //如果itemLen大于7则出现滚动条
+        if(itemLen > 6) {
+            listBod.style.height = 280 + "px";
+            listBod.style.overflowY = "scroll";
+        }
+        if(listBod != null) {
+            var itemNodes = listBod.childNodes;
+            //判断当前添加的item是否已在订单中存在，如果存在，则只用加数量
+            for(var i = 0; i< itemNodes.length; i++) {
+                if(itemNodes[i].nodeName == "DIV" && itemNodes[i].getAttribute("data-name") == name) {
+                    var itemNum = itemNodes[i].getAttribute("data-number");
+                    itemNum = parseFloat(itemNum) + 1;
+                    itemNodes[i].setAttribute("data-number", itemNum);
+                    var itemNumDis = itemNodes[i].getElementsByClassName("itemNumDis")[0];
+                    itemNumDis.innerHTML = itemNum;
+                    var itemPrDis = itemNodes[i].getElementsByClassName("itemPrDis")[0];
+                    itemPrDis.innerHTML = parseFloat(price) * parseFloat(itemNum);
+                    orderList.removeChild(grossList);
+                    addGrossList(calculateGross());
+                    return;
+                }
+            }
+        }
+
         //当前添加的item没有存在在订单中时，新建itemList
         var orderItem = document.createElement("div");
         orderItem.setAttribute("data-name", name);
@@ -120,7 +134,7 @@ define(["compatible"], function (compatible) {
         orderItem.appendChild(itemName);
         orderItem.appendChild(itemNumber);
         orderItem.appendChild(itemPrice);
-        orderList.appendChild(orderItem);
+        listBod.appendChild(orderItem);
         
         //如果客户点的还是第一个时，增加总价栏, 没有时 删除前一个总价栏再append
         if(itemLen == 0) {
