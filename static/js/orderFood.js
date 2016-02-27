@@ -1,35 +1,6 @@
 define(["compatible"], function (compatible) {
-    //获得订单列表头的位置信息
-    var getMyOrderHeaderPos = function (){
-        var myOrderHeader = document.getElementById("my-order-header");
-        var scroll = compatible.compatibleGetScroll();
-        var rect = myOrderHeader.getBoundingClientRect();
-        var orderHeaderPos = {};
-        if(scroll !== undefined) {
-            orderHeaderPos.top = rect.top + scroll.scrollTop;
-            orderHeaderPos.left = rect.left + scroll.scrollLeft;
-        } else {
-            orderHeaderPos.top = rect.top;
-            orderHeaderPos.left = rect.left;
-        }
-        return orderHeaderPos;
-    };
-    
-    //获取所点餐食的位置信息
-    var getOrderItemPos = function (targetEle) {
-        var rect = targetEle.getBoundingClientRect();
-        var scroll = compatible.compatibleGetScroll();
-        var orderItemPos = {};
-        if(scroll !== undefined) {
-            orderItemPos.top = rect.top + scroll.scrollTop;
-            orderItemPos.left = rect.left + scroll.scrollLeft;
-        } else {
-            orderItemPos.top = rect.top;
-            orderItemPos.left = rect.left;
-        }
-        return orderItemPos;
-    };
-    
+    //一直要用到这个orderList
+    var orderList = document.getElementById("my-order-list");
     //计算总价
     function calculateGross() {
         //总价
@@ -40,7 +11,6 @@ define(["compatible"], function (compatible) {
         }
         return gross;
     }
-    
     //总价栏
     function addGrossList(price) {
         var grossList = document.createElement("div");
@@ -52,7 +22,6 @@ define(["compatible"], function (compatible) {
         gross.innerHTML = price;
         grossList.appendChild(grossName);
         grossList.appendChild(gross);
-        var orderList = document.getElementById("my-order-list");
         orderList.appendChild(grossList);
     }
     
@@ -72,52 +41,31 @@ define(["compatible"], function (compatible) {
         sidehead.appendChild(name);
         sidehead.appendChild(num);
         sidehead.appendChild(price);
-        var orderList = document.getElementById("my-order-list");
         orderList.appendChild(sidehead);
     }
     
-    //点餐时，改变list中的项
-    var orderListChange = function (targetEle){
-        var grossList = document.getElementById("grossList");
+    //获取点击的项的信息
+    function getItemInfo(targetEle) {
         var name = targetEle.getAttribute("data-name");
         var price = targetEle.getAttribute("data-price");
-        var orderList = document.getElementById("my-order-list");
-        
-        //当客户点的还是第一个时，加上副标题，即出现 菜品、数量、价格栏
-        var itemLen = document.getElementsByClassName("orderItem").length;
-        if(itemLen == 0) {
-            addSidehead();
-            //在所有item外再加一层div是为了滚动条的出现更加自然
-            var listBody = document.createElement("div");
-            listBody.setAttribute("id", "listBody");
-            orderList.appendChild(listBody);
-        }
+        var itemInfo = {
+            itemName: name,
+            itemPrice: price
+        };
+        return itemInfo;
+    }
+    
+    // 增加orderItem外层div的函数
+    function buildListBody() {
+        var listBody = document.createElement("div");
+        listBody.setAttribute("id", "listBody");
+        orderList.appendChild(listBody);
+    }
+     
+    
+    //当订单列表中不存在用户所点击的项，新建订单项
+    function buildNewOrderItem(name, price) {
         var listBod = document.getElementById("listBody");
-        //如果itemLen大于7则出现滚动条
-        if(itemLen > 6) {
-            listBod.style.height = 280 + "px";
-            listBod.style.overflowY = "scroll";
-        }
-        if(listBod != null) {
-            var itemNodes = listBod.childNodes;
-            //判断当前添加的item是否已在订单中存在，如果存在，则只用加数量
-            for(var i = 0; i< itemNodes.length; i++) {
-                if(itemNodes[i].nodeName == "DIV" && itemNodes[i].getAttribute("data-name") == name) {
-                    var itemNum = itemNodes[i].getAttribute("data-number");
-                    itemNum = parseFloat(itemNum) + 1;
-                    itemNodes[i].setAttribute("data-number", itemNum);
-                    var itemNumDis = itemNodes[i].getElementsByClassName("itemNumDis")[0];
-                    itemNumDis.innerHTML = itemNum;
-                    var itemPrDis = itemNodes[i].getElementsByClassName("itemPrDis")[0];
-                    itemPrDis.innerHTML = parseFloat(price) * parseFloat(itemNum);
-                    orderList.removeChild(grossList);
-                    addGrossList(calculateGross());
-                    return;
-                }
-            }
-        }
-
-        //当前添加的item没有存在在订单中时，新建itemList
         var orderItem = document.createElement("div");
         orderItem.setAttribute("data-name", name);
         orderItem.setAttribute("data-number", 1);
@@ -135,7 +83,61 @@ define(["compatible"], function (compatible) {
         orderItem.appendChild(itemNumber);
         orderItem.appendChild(itemPrice);
         listBod.appendChild(orderItem);
-        
+    } 
+    
+    //订单中存在的项 只是增加数量和价格
+    function alreadyExitItem(ele, price, name, grossList) {
+        if(ele != null) {
+            var itemNodes = ele.childNodes;
+            //判断当前添加的item是否已在订单中存在，如果存在，则只用加数量
+            for(var i = 0; i< itemNodes.length; i++) {
+                if(itemNodes[i].nodeName == "DIV" && itemNodes[i].getAttribute("data-name") == name) {
+                    var itemNum = itemNodes[i].getAttribute("data-number");
+                    itemNum = parseFloat(itemNum) + 1;
+                    itemNodes[i].setAttribute("data-number", itemNum);
+                    var itemNumDis = itemNodes[i].getElementsByClassName("itemNumDis")[0];
+                    itemNumDis.innerHTML = itemNum;
+                    var itemPrDis = itemNodes[i].getElementsByClassName("itemPrDis")[0];
+                    itemPrDis.innerHTML = parseFloat(price) * parseFloat(itemNum);
+                    orderList.removeChild(grossList);
+                    addGrossList(calculateGross());
+                    return true;
+                }
+            }
+        }
+    }
+    
+    //滚动条的出现
+    function scrollDis(ele) {
+        ele.style.height = 280 + "px";
+        ele.style.overflowY = "scroll";
+    }
+    
+    //点餐时，改变list中的项
+    var orderListChange = function (targetEle){
+        var grossList = document.getElementById("grossList");
+        var targetItem = getItemInfo(targetEle);
+        var name = targetItem.itemName;
+        var price = targetItem.itemPrice;
+        //当客户点的还是第一个时，加上副标题，即出现 菜品、数量、价格栏
+        var itemLen = document.getElementsByClassName("orderItem").length;
+        if(itemLen == 0) {
+            addSidehead();
+            //在所有item外再加一层div是为了滚动条的出现更加自然
+            buildListBody();
+        }
+        var listBod = document.getElementById("listBody");
+        //如果itemLen大于7则出现滚动条
+        if(itemLen > 6) {
+            scrollDis(listBod);
+        }
+        //只是数量和价格增加
+        var exit = alreadyExitItem(listBod, price, name, grossList);
+        if(exit == true) {
+            return;
+        }
+        //等会儿新建的函数在这里调用
+        buildNewOrderItem(name, price);
         //如果客户点的还是第一个时，增加总价栏, 没有时 删除前一个总价栏再append
         if(itemLen == 0) {
             addGrossList(calculateGross()); 
@@ -146,8 +148,6 @@ define(["compatible"], function (compatible) {
     };
     
     return {
-        getMyOrderHeaderPos: getMyOrderHeaderPos,
-        getOrderItemPos: getOrderItemPos,
         orderListChange: orderListChange
     };
 });
