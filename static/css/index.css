@@ -249,9 +249,20 @@ body {
 #my-order-list .itemPrDis,
 #sidehead #sideheadPrice {
     width: 30px;
+    margin-left: 30px;
+}
+
+#my-order-list .itemNumDis {
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
 }
 
 #grossList #gross {
     font-weight: bold;
     color: rgb(254, 77, 61);
+}
+
+.subIcon:hover, .addIcon:hover {
+    cursor: pointer;
 }

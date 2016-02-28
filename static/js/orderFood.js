@@ -61,7 +61,6 @@ define(["compatible"], function (compatible) {
         listBody.setAttribute("id", "listBody");
         orderList.appendChild(listBody);
     }
-     
     
     //当订单列表中不存在用户所点击的项，新建订单项
     function buildNewOrderItem(name, price) {
@@ -73,6 +72,12 @@ define(["compatible"], function (compatible) {
         var itemName = document.createElement("span");
         var itemNumber = document.createElement("span");
         var itemPrice = document.createElement("span");
+        var subIcon = document.createElement("img");
+        var addIcon = document.createElement("img");
+        subIcon.setAttribute("class", "subIcon");
+        addIcon.setAttribute("class", "addIcon");
+        subIcon.setAttribute("src", "../image/order-list-sub.png");
+        addIcon.setAttribute("src", "../image/order-list-add.png");
         itemName.setAttribute("class", "itemNamDis");
         itemName.innerHTML = name;
         itemPrice.setAttribute("class", "itemPrDis");
@@ -80,7 +85,9 @@ define(["compatible"], function (compatible) {
         itemNumber.setAttribute("class", "itemNumDis");
         itemNumber.innerHTML = 1;
         orderItem.appendChild(itemName);
+        orderItem.appendChild(subIcon);
         orderItem.appendChild(itemNumber);
+        orderItem.appendChild(addIcon);
         orderItem.appendChild(itemPrice);
         listBod.appendChild(orderItem);
     } 
@@ -112,6 +119,15 @@ define(["compatible"], function (compatible) {
         ele.style.height = 280 + "px";
         ele.style.overflowY = "scroll";
     }
+    
+    var subItem = function (targetEle){
+        var parentEle = targetEle.parentNode;
+        console.log(parentEle);
+    };
+    
+    var addItem = function (targetEle){
+        
+    };
     
     //点餐时，改变list中的项
     var orderListChange = function (targetEle){
@@ -148,7 +164,9 @@ define(["compatible"], function (compatible) {
     };
     
     return {
-        orderListChange: orderListChange
+        orderListChange: orderListChange,
+        subItem: subItem,
+        addItem: addItem
     };
 });
 

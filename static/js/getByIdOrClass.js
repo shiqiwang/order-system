@@ -21,6 +21,14 @@ define(["colorChange", "orderFood", "backToTop"], function (colorChange, orderFo
                 Eles[i].addEventListener("click", function(event){
                     orderFood.orderListChange(event.target);
                 });
+            } else if(EleClass === "subIcon") {
+                Eles[i].addEventListener("click", function(event){
+                    orderFood.subItem(event.target);
+                });
+            } else if(EleClass === "addIcon") {
+                Eles[i].addEventListener("click", function(event){
+                    orderFood.addItem(event.target);
+                });
             }
         }
     };

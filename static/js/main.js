@@ -10,4 +10,6 @@ define(["getByIdOrClass"], function (getByIdOrClass) {
     getByIdOrClass.addEveListenerId("rollback-to-top");
     //点餐效果
     getByIdOrClass.addEveListenerClass("add-icon");
+    getByIdOrClass.addEveListenerClass("subIcon");
+    getByIdOrClass.addEveListenerClass("addIcon");
 });
