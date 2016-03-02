@@ -16,18 +16,10 @@ define(["colorChange", "orderFood", "backToTop"], function (colorChange, orderFo
     //参数为class的点击事件
     var addEveListenerClass = function (EleClass) {
         var Eles = document.getElementsByClassName(EleClass);
-        for(var i = 0; i < Eles.length; i++) {
-            if(EleClass === "add-icon") {
+        if(EleClass === "add-icon") {
+            for(var i = 0; i < Eles.length; i++) {
                 Eles[i].addEventListener("click", function(event){
                     orderFood.orderListChange(event.target);
-                });
-            } else if(EleClass === "subIcon") {
-                Eles[i].addEventListener("click", function(event){
-                    orderFood.subItem(event.target);
-                });
-            } else if(EleClass === "addIcon") {
-                Eles[i].addEventListener("click", function(event){
-                    orderFood.addItem(event.target);
                 });
             }
         }

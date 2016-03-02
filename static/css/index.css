@@ -266,3 +266,17 @@ body {
 .subIcon:hover, .addIcon:hover {
     cursor: pointer;
 }
+
+#grossList #submitButton {
+    float: right;
+    background-color: rgb(255, 215, 0);
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    width: 40px;
+    margin-right: 0;
+}
+
+#grossList #submitButton:hover {
+    cursor: pointer;
+}

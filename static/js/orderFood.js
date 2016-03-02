@@ -20,8 +20,12 @@ define(["compatible"], function (compatible) {
         var gross = document.createElement("span");
         gross.setAttribute("id", "gross");
         gross.innerHTML = price;
+        var submitButton = document.createElement("span");
+        submitButton.setAttribute("id", "submitButton");
+        submitButton.innerHTML = "下单";
         grossList.appendChild(grossName);
         grossList.appendChild(gross);
+        grossList.appendChild(submitButton);
         orderList.appendChild(grossList);
     }
     
@@ -68,6 +72,7 @@ define(["compatible"], function (compatible) {
         var orderItem = document.createElement("div");
         orderItem.setAttribute("data-name", name);
         orderItem.setAttribute("data-number", 1);
+        orderItem.setAttribute("unit-price", price);
         orderItem.setAttribute("class", "orderItem");
         var itemName = document.createElement("span");
         var itemNumber = document.createElement("span");
@@ -78,6 +83,12 @@ define(["compatible"], function (compatible) {
         addIcon.setAttribute("class", "addIcon");
         subIcon.setAttribute("src", "../image/order-list-sub.png");
         addIcon.setAttribute("src", "../image/order-list-add.png");
+        subIcon.addEventListener("click", function(event) {
+            itemNumChange(event.target);
+        });
+        addIcon.addEventListener("click", function(event){
+            itemNumChange(event.target);
+        });
         itemName.setAttribute("class", "itemNamDis");
         itemName.innerHTML = name;
         itemPrice.setAttribute("class", "itemPrDis");
@@ -117,17 +128,51 @@ define(["compatible"], function (compatible) {
     //滚动条的出现
     function scrollDis(ele) {
         ele.style.height = 280 + "px";
-        ele.style.overflowY = "scroll";
+        ele.style.overflowY = "auto";
     }
     
-    var subItem = function (targetEle){
-        var parentEle = targetEle.parentNode;
-        console.log(parentEle);
+    var itemNumChange = function (targetEle){
+        var targetParent = targetEle.parentNode;
+        var unitPr = parseFloat(targetParent.getAttribute("unit-price"));
+        var itemNum = parseFloat(targetParent.getAttribute("data-number"));
+        var itemNumDis = targetParent.querySelectorAll(".itemNumDis")[0];
+        var itemPrDis = targetParent.querySelectorAll(".itemPrDis")[0];
+        var orderItemLen = document.getElementsByClassName("orderItem").length;
+        var gross = document.getElementById("gross");
+        var grossMoney = parseFloat(gross.innerHTML);
+        var listBody = document.getElementById("listBody");
+        var newItemNum;
+        if(targetEle.getAttribute("class") == "subIcon") {
+            newItemNum = itemNum - 1; 
+            gross.innerHTML = grossMoney - unitPr;
+        } else {
+            newItemNum = itemNum + 1;
+            gross.innerHTML = grossMoney + unitPr;
+        }
+        var itemGross = unitPr * newItemNum;
+        //数量为0时，删除这一项订单
+        if(newItemNum == 0) {
+            var targetAncestor = targetParent.parentNode;
+            targetAncestor.removeChild(targetParent);
+            //当一个东西都没有的时候，要记得把总价和副标题栏也删了
+            if(orderItemLen == 1) {
+                var sideHead = document.getElementById("sidehead");
+                var grossList = document.getElementById("grossList");
+                orderList.removeChild(sideHead);
+                orderList.removeChild(listBody);
+                orderList.removeChild(grossList);
+            }
+            if(orderItemLen < 7 || orderItemLen == 7) {
+                listBody.style.height = "auto";
+            }
+        } else {
+            targetParent.setAttribute("data-number", newItemNum);
+            itemNumDis.innerHTML = newItemNum;
+            itemPrDis.innerHTML = itemGross;
+        }
     };
     
-    var addItem = function (targetEle){
-        
-    };
+    
     
     //点餐时，改变list中的项
     var orderListChange = function (targetEle){
@@ -165,8 +210,7 @@ define(["compatible"], function (compatible) {
     
     return {
         orderListChange: orderListChange,
-        subItem: subItem,
-        addItem: addItem
+        itemNumChange: itemNumChange
     };
 });
 
